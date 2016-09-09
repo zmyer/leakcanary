@@ -2,18 +2,19 @@ package com.squareup.leakcanary;
 
 import com.squareup.haha.perflib.RootObj;
 import com.squareup.haha.perflib.Snapshot;
-
-import org.junit.Before;
-import org.junit.Test;
-
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import org.junit.Before;
+import org.junit.Test;
 
 import static com.squareup.haha.perflib.RootType.NATIVE_STATIC;
 import static com.squareup.haha.perflib.RootType.SYSTEM_CLASS;
+import static com.squareup.leakcanary.TestUtil.HeapDumpFile.BINDER_LEAK;
 import static java.util.Arrays.asList;
+import static junit.framework.Assert.assertTrue;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HeapAnalyzerTest {
@@ -57,5 +58,17 @@ public class HeapAnalyzerTest {
       snapshot.addRoot(root);
     }
     return snapshot;
+  }
+
+  @Test public void binderLeak() {
+    ExcludedRefs.BuilderWithParams excludedRefs =
+        new ExcludedRefs.BuilderWithParams().clazz(WeakReference.class.getName())
+            .alwaysExclude()
+            .clazz("java.lang.ref.FinalizerReference")
+            .alwaysExclude();
+
+    AnalysisResult result = TestUtil.analyze(BINDER_LEAK, excludedRefs);
+
+    assertTrue(result.leakFound);
   }
 }

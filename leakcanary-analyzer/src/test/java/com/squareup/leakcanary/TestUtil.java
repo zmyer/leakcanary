@@ -24,7 +24,8 @@ final class TestUtil {
     ASYNC_TASK("leak_asynctask.hprof", "dc983a12-d029-4003-8890-7dd644c664c5"),
     ASYNC_TASK_MPREVIEW2("leak_asynctask_mpreview2.hprof", "1114018e-e154-435f-9a3d-da63ae9b47fa"),
     ASYNC_TASK_M_POSTPREVIEW2("leak_asynctask_m_postpreview2.hprof",
-        "25ae1778-7c1d-4ec7-ac50-5cce55424069");
+        "25ae1778-7c1d-4ec7-ac50-5cce55424069"),
+    BINDER_LEAK("LC_issue_482.hprof", "8aeae2dd-98ec-4a91-a91c-c730a3332f76");
 
     private final String filename;
     private final String referenceKey;
