@@ -34,6 +34,7 @@ import static android.os.Build.VERSION_CODES.N;
 import static android.os.Build.VERSION_CODES.N_MR1;
 import static android.os.Build.VERSION_CODES.O;
 import static android.os.Build.VERSION_CODES.O_MR1;
+import static android.os.Build.VERSION_CODES.P;
 import static com.squareup.leakcanary.AndroidWatchExecutor.LEAK_CANARY_THREAD_NAME;
 import static com.squareup.leakcanary.internal.LeakCanaryInternals.HUAWEI;
 import static com.squareup.leakcanary.internal.LeakCanaryInternals.LENOVO;
@@ -572,6 +573,17 @@ public enum AndroidExcludedRefs {
       // path. Let's not confuse people with a shorter path that is less meaningful.
       excluded.instanceField("android.view.Choreographer$FrameDisplayEventReceiver",
           "mMessageQueue").alwaysExclude();
+    }
+  },
+
+  VIEWLOCATIONHOLDER_ROOT(SDK_INT == P) {
+    @Override void add(ExcludedRefs.Builder excluded) {
+      //  In Android P, ViewLocationHolder has an mRoot field that is not cleared in its clear()
+      // method.
+      // Introduced in https://github.com/aosp-mirror/platform_frameworks_base/commit/86b326012813f09d8f1de7d6d26c986a909de894
+      // Bug report: https://issuetracker.google.com/issues/112792715
+      excluded.instanceField("android.view.ViewGroup$ViewLocationHolder",
+          "mRoot");
     }
   };
 
